@@ -4,14 +4,15 @@ import pandas as pd
 import os 
 from src.logger import logging
 from src.exception import CustomException
+from src.components.data_transformation import DataTransformation
 import sys
 
 
 @dataclass
 class DataIngestionConfig:
-    train_data_path: str = os.path.join('atrifacts',"train.csv")
-    test_data_path: str = os.path.join('atrifacts',"test.csv")
-    raw_data_path: str = os.path.join('atrifacts',"data.csv")
+    train_data_path: str = os.path.join('artifacts',"train.csv")
+    test_data_path: str = os.path.join('artifacts',"test.csv")
+    raw_data_path: str = os.path.join('artifacts',"data.csv")
 
 class DataIngestion:
     def __init__(self):
@@ -29,11 +30,14 @@ class DataIngestion:
             train_set.to_csv(self.Ingestion_config.train_data_path,index=False,header=True)
             test_set.to_csv(self.Ingestion_config.test_data_path,index=False,header=True)
             logging.info("Data ingestion completed successfully")
+
+            return (self.Ingestion_config.test_data_path,self.Ingestion_config.train_data_path)
         except Exception as e: 
             raise CustomException(e,sys)
         
 if __name__ == "__main__":
     dataingestion= DataIngestion()
-    dataingestion.initiate_data_ingestion()
-
+    test_path,train_path=dataingestion.initiate_data_ingestion()
+    data_transform= DataTransformation()
+    data_transform.initiate_data_transformation(train_path,test_path)
         
