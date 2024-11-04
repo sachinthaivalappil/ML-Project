@@ -5,6 +5,7 @@ import os
 from src.logger import logging
 from src.exception import CustomException
 from src.components.data_transformation import DataTransformation
+from src.components.model_trainer import ModelTrainer
 import sys
 
 
@@ -21,7 +22,7 @@ class DataIngestion:
     def initiate_data_ingestion(self):
         logging.info("Starting data ingestion method")
         try:
-            df=pd.read_csv('/Users/sachints/Desktop/projects/ML Project/ML-Project/notebook/data/stud.csv')
+            df=pd.read_csv('C:\\Users\\100744\\Desktop\\ML project\\ML-Project\\notebook\data\stud.csv')
             logging.info("Data Read completed successfully")
             os.makedirs(os.path.dirname(self.Ingestion_config.train_data_path),exist_ok=True)
             df.to_csv(self.Ingestion_config.raw_data_path,index=False,header=True)
@@ -39,5 +40,7 @@ if __name__ == "__main__":
     dataingestion= DataIngestion()
     test_path,train_path=dataingestion.initiate_data_ingestion()
     data_transform= DataTransformation()
-    data_transform.initiate_data_transformation(train_path,test_path)
+    train_arr,test_arr,_=data_transform.initiate_data_transformation(train_path,test_path)
+    model_train= ModelTrainer()
+    print(model_train.initiate_model_trainer(train_arr,test_arr))
         
